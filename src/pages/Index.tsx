@@ -45,33 +45,49 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-todo-light relative overflow-hidden">
+    <div className="min-h-screen bg-[#1A1F2C] relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 z-0">
         <motion.div
-          className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-gradient-to-r from-todo-rose/30 to-todo-purple/30 blur-3xl"
+          className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-r from-[#9b87f5]/20 to-[#6E59A5]/20 blur-[100px]"
           animate={{
             x: [0, 100, 0],
             y: [0, 50, 0],
             scale: [1, 1.2, 1],
+            opacity: [0.5, 0.8, 0.5],
           }}
           transition={{
-            duration: 20,
+            duration: 25,
             repeat: Infinity,
-            ease: "linear",
+            ease: "easeInOut",
           }}
         />
         <motion.div
-          className="absolute bottom-[-20%] right-[-10%] w-[400px] h-[400px] rounded-full bg-gradient-to-l from-todo-purple/20 to-todo-rose/20 blur-3xl"
+          className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-gradient-to-l from-[#7E69AB]/20 to-[#D6BCFA]/20 blur-[80px]"
           animate={{
             x: [0, -50, 0],
             y: [0, 100, 0],
             scale: [1, 1.1, 1],
+            opacity: [0.3, 0.6, 0.3],
           }}
           transition={{
-            duration: 15,
+            duration: 20,
             repeat: Infinity,
-            ease: "linear",
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-[30%] right-[20%] w-[400px] h-[400px] rounded-full bg-gradient-to-tl from-[#6E59A5]/10 to-[#9b87f5]/10 blur-[120px]"
+          animate={{
+            x: [0, -30, 0],
+            y: [0, -50, 0],
+            scale: [1, 1.15, 1],
+            opacity: [0.2, 0.5, 0.2],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "easeInOut",
           }}
         />
       </div>
@@ -83,10 +99,10 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-todo-rose to-todo-purple bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D6BCFA] bg-clip-text text-transparent mb-2">
             Tasks
           </h1>
-          <p className="text-gray-600">Stay organized, focused, and productive.</p>
+          <p className="text-[#D6BCFA]/70">Stay organized, focused, and productive.</p>
         </motion.div>
 
         <AddTodo onAdd={addTodo} />
@@ -96,7 +112,7 @@ const Index = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-12 text-gray-500"
+              className="text-center py-12 text-[#D6BCFA]/50"
             >
               No tasks yet. Add one to get started!
             </motion.div>
