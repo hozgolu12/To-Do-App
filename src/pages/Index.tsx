@@ -45,8 +45,39 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-todo-light">
-      <div className="container max-w-2xl py-12 px-4">
+    <div className="min-h-screen bg-todo-light relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 z-0">
+        <motion.div
+          className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-gradient-to-r from-todo-rose/30 to-todo-purple/30 blur-3xl"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-[-20%] right-[-10%] w-[400px] h-[400px] rounded-full bg-gradient-to-l from-todo-purple/20 to-todo-rose/20 blur-3xl"
+          animate={{
+            x: [0, -50, 0],
+            y: [0, 100, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      </div>
+
+      {/* Content */}
+      <div className="container max-w-2xl py-12 px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
