@@ -30,11 +30,11 @@ export const AddTodo = ({ onAdd }: AddTodoProps) => {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Add a new task..."
-        className="flex-1 px-4 py-3 rounded-xl border border-[#403E43]/20 bg-[#221F26]/50 backdrop-blur-sm text-[#D6BCFA] placeholder:text-[#D6BCFA]/30 focus:outline-none focus:ring-2 focus:ring-[#9b87f5]/20 focus:border-[#9b87f5] transition-all duration-200"
+        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-todo-purple/20 focus:border-todo-purple transition-all duration-200"
       />
       <button
         type="submit"
-        className="px-4 py-3 rounded-xl bg-gradient-to-r from-[#9b87f5] to-[#6E59A5] text-white shadow-sm hover:shadow-[#9b87f5]/20 hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+        className="px-4 py-3 rounded-xl bg-gradient-to-r from-todo-rose to-todo-purple text-white shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2"
       >
         <Plus size={20} />
         Add
