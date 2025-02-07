@@ -4,7 +4,8 @@ import { AddTodo } from "@/components/AddTodo";
 import { TodoItem } from "@/components/TodoItem";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/lib/supabase";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
 
 interface Todo {
   id: string;
@@ -18,45 +19,34 @@ const Index = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchTodos();
-  }, []);
-
-  const fetchTodos = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('todos')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setTodos(data || []);
-    } catch (error) {
+    const q = query(collection(db, 'todos'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const todosData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Todo[];
+      setTodos(todosData);
+      setLoading(false);
+    }, (error) => {
       console.error('Error fetching todos:', error);
       toast({
         title: "Error",
         description: "Failed to fetch todos.",
       });
-    } finally {
       setLoading(false);
-    }
-  };
+    });
+
+    return () => unsubscribe();
+  }, [toast]);
 
   const addTodo = async (text: string) => {
     try {
-      const newTodo = {
+      await addDoc(collection(db, 'todos'), {
         text,
         completed: false,
-      };
+        createdAt: new Date().toISOString()
+      });
 
-      const { data, error } = await supabase
-        .from('todos')
-        .insert([newTodo])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setTodos([data, ...todos]);
       toast({
         title: "Task added",
         description: "Your new task has been added successfully.",
@@ -72,21 +62,13 @@ const Index = () => {
 
   const toggleTodo = async (id: string) => {
     try {
+      const todoRef = doc(db, 'todos', id);
       const todo = todos.find(t => t.id === id);
       if (!todo) return;
 
-      const { error } = await supabase
-        .from('todos')
-        .update({ completed: !todo.completed })
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setTodos(
-        todos.map((todo) =>
-          todo.id === id ? { ...todo, completed: !todo.completed } : todo
-        )
-      );
+      await updateDoc(todoRef, {
+        completed: !todo.completed
+      });
     } catch (error) {
       console.error('Error toggling todo:', error);
       toast({
@@ -98,14 +80,8 @@ const Index = () => {
 
   const deleteTodo = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from('todos')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setTodos(todos.filter((todo) => todo.id !== id));
+      await deleteDoc(doc(db, 'todos', id));
+      
       toast({
         title: "Task deleted",
         description: "Your task has been deleted successfully.",
