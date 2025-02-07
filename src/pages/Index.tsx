@@ -5,7 +5,10 @@ import { TodoItem } from "@/components/TodoItem";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy, where } from 'firebase/firestore';
+import { useAuth } from "@/contexts/AuthContext";
+import { LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Todo {
   id: string;
@@ -17,9 +20,18 @@ const Index = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const q = query(collection(db, 'todos'), orderBy('createdAt', 'desc'));
+    if (!user) return;
+
+    const q = query(
+      collection(db, 'todos'),
+      where('userId', '==', user.uid),
+      orderBy('createdAt', 'desc')
+    );
+    
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const todosData = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -37,14 +49,27 @@ const Index = () => {
     });
 
     return () => unsubscribe();
-  }, [toast]);
+  }, [user, toast]);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out.",
+      });
+    }
+  };
 
   const addTodo = async (text: string) => {
     try {
       await addDoc(collection(db, 'todos'), {
         text,
         completed: false,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        userId: user?.uid
       });
 
       toast({
@@ -98,6 +123,15 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-todo-light">
       <div className="container max-w-2xl py-12 px-4">
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <LogOut size={20} />
+            Logout
+          </button>
+        </div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
