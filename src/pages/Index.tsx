@@ -1,47 +1,119 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AddTodo } from "@/components/AddTodo";
 import { TodoItem } from "@/components/TodoItem";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
-
-interface Todo {
-  id: string;
-  text: string;
-  completed: boolean;
-}
+import { supabase } from "@/lib/supabase";
+import type { Todo } from "@/lib/supabase";
 
 const Index = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const addTodo = (text: string) => {
-    const newTodo = {
-      id: Date.now().toString(),
-      text,
-      completed: false,
-    };
-    setTodos([newTodo, ...todos]);
-    toast({
-      title: "Task added",
-      description: "Your new task has been added successfully.",
-    });
-  };
-
-  const toggleTodo = (id: string) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+  useEffect(() => {
+    fetchTodos();
+    const subscription = supabase
+      .channel('todos')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'todos' }, 
+        fetchTodos
       )
-    );
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const fetchTodos = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('todos')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setTodos(data || []);
+    } catch (error) {
+      console.error('Error fetching todos:', error);
+      toast({
+        title: "Error fetching todos",
+        description: "Please try again later.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteTodo = (id: string) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-    toast({
-      title: "Task deleted",
-      description: "Your task has been deleted successfully.",
-    });
+  const addTodo = async (text: string) => {
+    try {
+      const newTodo = {
+        text,
+        completed: false,
+        created_at: new Date().toISOString(),
+      };
+
+      const { error } = await supabase
+        .from('todos')
+        .insert([newTodo]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Task added",
+        description: "Your new task has been added successfully.",
+      });
+    } catch (error) {
+      console.error('Error adding todo:', error);
+      toast({
+        title: "Error adding task",
+        description: "Please try again later.",
+      });
+    }
+  };
+
+  const toggleTodo = async (id: string) => {
+    try {
+      const todoToUpdate = todos.find(todo => todo.id === id);
+      if (!todoToUpdate) return;
+
+      const { error } = await supabase
+        .from('todos')
+        .update({ completed: !todoToUpdate.completed })
+        .eq('id', id);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error toggling todo:', error);
+      toast({
+        title: "Error updating task",
+        description: "Please try again later.",
+      });
+    }
+  };
+
+  const deleteTodo = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('todos')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Task deleted",
+        description: "Your task has been deleted successfully.",
+      });
+    } catch (error) {
+      console.error('Error deleting todo:', error);
+      toast({
+        title: "Error deleting task",
+        description: "Please try again later.",
+      });
+    }
   };
 
   return (
@@ -108,7 +180,15 @@ const Index = () => {
         <AddTodo onAdd={addTodo} />
 
         <AnimatePresence mode="popLayout">
-          {todos.length === 0 ? (
+          {loading ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-12 text-[#D6BCFA]/50"
+            >
+              Loading tasks...
+            </motion.div>
+          ) : todos.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
