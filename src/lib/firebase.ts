@@ -1,17 +1,17 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getAuth,GoogleAuthProvider} from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAy6iZSpyjyeu9CS5ouMpz8xLWcD9E0V10",
-  authDomain: "to-do-list-aac53.firebaseapp.com",
-  projectId: "to-do-list-aac53",
-  storageBucket: "to-do-list-aac53.firebasestorage.app",
-  messagingSenderId: "27896738282",
-  appId: "1:27896738282:web:bdfe3fb72376a00a790293",
-  measurementId: "G-L0RX6FPYZ9"
+  apiKey: "AIzaSyAxtfIZU4IPov_0zCVbjfe9wYgLUR2g2fs",
+  authDomain: "to-do-list-4fa24.firebaseapp.com",
+  projectId: "to-do-list-4fa24",
+  storageBucket: "to-do-list-4fa24.firebasestorage.app",
+  messagingSenderId: "338431733863",
+  appId: "1:338431733863:web:d9c4c002b7e37ce4c464c2"
 };
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();

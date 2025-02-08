@@ -1,7 +1,7 @@
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '@/lib/firebase';
-import { User, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import {  useEffect, useState } from 'react';
+import {auth,googleProvider} from '../lib/firebase';
+import { User,signInWithPopup,signOut, } from 'firebase/auth';
 import AuthContext from './AuthContextType';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -17,12 +17,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return unsubscribe;
   }, []);
 
-  const login = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
-  };
-
-  const signup = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+  const loginWithGoogle = async () => {
+    const result = await signInWithPopup(auth, googleProvider);
+    if (result.user) {
+      // Handle additional user data if needed
+    }
   };
 
   const logout = async () => {
@@ -30,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, loginWithGoogle, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );
