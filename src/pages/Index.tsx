@@ -145,7 +145,22 @@ const Index = () => {
 
         <AddTodo onAdd={addTodo} />
 
+        
+      <motion.div
+        animate={{
+          y: [20, -20],
+          opacity: [0.5, 1, 0.5]
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          repeatType: "reverse"
+        }}
+        className="absolute bottom-40 right-32 w-6 h-6 rounded-full bg-white/30"
+      />
+
         <AnimatePresence mode="popLayout">
+       
           {loading ? (
             <motion.div
               initial={{ opacity: 0 }}
