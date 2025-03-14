@@ -1,4 +1,3 @@
-
 import {  useEffect, useState } from 'react';
 import {auth,googleProvider} from '../lib/firebase';
 import { User,signInWithPopup,signOut, } from 'firebase/auth';

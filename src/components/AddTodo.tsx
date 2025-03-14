@@ -7,7 +7,7 @@ interface AddTodoProps {
   onAdd: (text: string) => void;
 }
 
-export const AddTodo = ({ onAdd }: AddTodoProps) => {
+export const AddTodo = ( {onAdd}:AddTodoProps) => {
   const [text, setText] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {

@@ -1,0 +1,164 @@
+1. .trim():
+
+   It is a string method that removes whitespace from both the beginning and end of a string, but not from the middle. It returns a new string with the whitespace removed.
+
+2. Lucide-React:
+
+   It is a popular icon library that provides a wide range of icons for use in web applications.
+
+3. cn:
+
+   cn is a utility function that is commonly used in React applications to conditionally join classNames together.
+
+4. ({ children }: { children: React.ReactNode }): 
+
+   This is the function signature of the component. It takes a single prop called children, which is an object with a single property children of type React.ReactNode. This means that the component expects to receive other React components as its children.
+
+5. Context:
+
+   In React, a context is a way to share data between components without passing props down manually.
+
+6. import type {ToastActionElement,ToastProps,} from "@/components/ui/toast":
+
+   This line imports only the type definitions for ToastActionElement and ToastProps from the @/components/ui/toast module using import type. This is done to avoid importing the actual values, which are not needed in this file.
+
+7. const objectname={obj1,obj2,obj3} as const:
+
+   Here first const create a variable whose value cannot be reassigned, while as const tells typescript to treat the object literal as having all properties as read only,even if the object itself is mutable.
+
+8. let count = 0 function genId() {count = (count + 1) % Number.MAX_SAFE_INTEGER return count.toString()}:
+
+   This function is used to generate unique id to identify the toast for performing actions such as updating or dismissing it.It count up to maximum safe integer after that it reset to zero.
+
+9. Difference between type and interface:
+
+    Type is not enforceable at runtime, meaning TypeScript will not throw an error if we assign a value to a variable that does not match the type. Interface is enforceable at runtime, meaning TypeScript will throw an error if we create an object that does not implement the interface.
+
+10. const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>():
+
+    This line of code creates a new instance of a Map data structure, named toastTimeouts.
+
+    Here's what it does:
+
+    The Map is a collection of key-value pairs, where each key is a string (string) and each value is the return value of the setTimeout function (ReturnType<typeof setTimeout>).
+    In other words, this map will store timeout IDs (returned by setTimeout) with a string key.
+    The purpose of this map is likely to keep track of active timeouts, allowing them to be cleared or managed later using the stored IDs.
+
+11. const addToRemoveQueue = (toastId: string) => {if (toastTimeouts.has(toastId)) {return }const timeout = setTimeout(() => { toastTimeouts.delete(toastId) dispatch({   type: "REMOVE_TOAST",   toastId: toastId, })}, TOAST_REMOVE_DELAY) toastTimeouts.set(toastId, timeout)}:
+
+    This function schedules a toast to be removed after a certain delay, and keeps track of the timeout IDs to prevent duplicate removals.
+    
+12. Reducer funtion in toast:
+    The reducer updates the state accordingly for each action, and returns the new state.
+
+13. const listeners: Array<(state: State) => void> = []:
+
+    This line declares a constant variable named listeners and initializes it to an empty array.
+    The type of the listeners array is specified as Array<(state: State) => void>, which means it's an array of functions that take a State object as an argument and return nothing (void).
+    The purpose of the listeners array is to store functions that will be called whenever the state changes.
+
+14. let memoryState: State = { toasts: [] } function dispatch(action: Action) { memoryState = reducer(memoryState, action) listeners.forEach((listener) => {   listener(memoryState) })}:
+   
+    This code sets up a simple state management system with a dispatch function that updates the state by calling the reducer function, and notifies any registered listeners of the new state.
+
+15. toast function:
+     
+    This code defines a toast function that creates a new toast notification with a unique ID and returns an object with functions to update and dismiss the toast.It is used to provide notification for about an event that is being executed.
+    example: if a user logged in then it notifies the user has logged in successfully, if we update a task then it notifies about the updation condition whether it is updataed successfully or not.
+
+16. useToast function:
+    
+    This code defines a useToast hook that returns an object with the current state, a toast function, and a dismiss function. The hook uses the useState and useEffect hooks from React to manage the state and side effects.
+
+17. export function cn(...inputs: ClassValue[]) {return twMerge(clsx(inputs))}:
+
+    This code defines a new function cn that takes multiple class names as arguments and returns a single string of class names, merged according to Tailwind CSS's rules. The function uses the clsx and twMerge functions from the clsx and tailwind-merge libraries, respectively.
+
+18. useNavigate():
+
+    useNavigate() is a hook from the React Router library that allows us to programmatically navigate to a different route in our application.
+
+19. query():
+
+    It is used to retrieve data from collections based on the where condition and order by to order the data in ascending or descending order.
+
+20. AnimatePresence:
+    
+    AnimatePresence is a component from the framer-motion library that allows us to animate the presence of elements in the DOM. In this case, it's used to animate the loading state, empty state, and todo items.
+
+21. useLocation():
+
+    useLocation() is a hook in React Router that returns the current location object.
+
+22. location object:
+
+    The location object is an object that represents the current URL of the application. It contains information about the current route, including the pathname, search parameters, and hash.
+    It is used in not found page where we try to navigate to a non existence page.
+
+23. drop-shadow:
+
+    The drop-shadow filter in CSS is used to create a shadow effect on an element. 
+    example:   .drop-shadow {
+         filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.5));
+     }
+    In this example, the drop-shadow filter takes four values:
+    10px: The horizontal offset of the shadow.
+    10px: The vertical offset of the shadow.
+    10px: The blur radius of the shadow.
+    rgba(0, 0, 0, 0.5): The color of the shadow.
+
+24. Shadcn UI:
+    
+    Shadcn UI is a popular UI component library for React that provides a set of pre-built UI components, including layout components, navigation components, form components, and more.
+
+25. QueryClient:
+
+    It is used to manage data fetching and caching.
+
+26. ProtectedRoute function:
+
+    This is a React component named ProtectedRoute. It wraps around other components (children) and only renders them if the user is authenticated. If the authentication status is still loading, it displays a "Loading..." message. 
+    If the user is not authenticated, it redirects to the login page.
+
+27. Toaster and Sonner:
+
+    Toaster is a component that displays toast notifications, whereas Sonner is a component that displays a toast notification with a sound effect.
+    In other words, Toaster is a visual notification, while Sonner is an audible notification.
+
+28. BrowserRouter:
+
+    BrowserRouter is the top-level component that wraps our entire application. 
+    It uses the HTML5 history API to keep the UI in sync with the URL. It's the recommended way to handle routing in React applications.
+
+29. Routes:
+
+    Routes is a component that allows us to define multiple routes in a single place. It's a container for Route components.
+
+30. Route:
+    
+    Route is the component that defines a single route in your application. It takes two main props: path and element. 
+    The path prop specifies the URL path that the route should match, and the element prop specifies the component that should be rendered when the route is matched.
+
+31. TooltipProvider:
+
+    TooltipProvider is a component from the react-tooltip library, which is a popular library for creating tooltips in React applications.
+    Tooltips are a common UI element used to provide additional information or context about a particular element or action on a website or application. Here are some best practices and considerations for using tooltips in UI:
+
+    Types of Tooltips
+
+    Hover tooltips: Appear when a user hovers over an element, typically providing a brief description or explanation.
+    Click tooltips: Appear when a user clicks on an element, often providing more detailed information or options.
+    Focus tooltips: Appear when an element receives focus, such as when a user tabs to an input field.
+
+32. ! operator in document.getElementById("root")!:
+
+    The ! symbol is called the "non-null assertion operator".
+    It's used to tell TypeScript (or other type checkers) that the expression before it is not null or undefined.
+    In this case, document.getElementById("root")! means "I'm sure that document.getElementById("root") will return a non-null value".
+
+33. Utility Library:
+
+    A utility library is a collection of reusable functions or classes that provide a specific functionality, often used to perform common tasks or operations. 
+    These libraries are designed to be used across multiple projects, applications, or even organizations.
+
+    
